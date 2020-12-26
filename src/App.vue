@@ -24,15 +24,7 @@
         .container
           h1.paints__title Картины эпохи Возрождения
           .paints__block
-            .paints__card(v-for="(i, index) in paints" :key="index" :class="{'paints__card-sale': i.sale}")
-              img(:src="i.imgSrc" alt="logo")
-              h3.paints__card-name {{i.title}}
-              .paints__card-block
-                .paints__card-price
-                  p.paints__card-old-price {{i.oldPrice}}
-                  p.paints__card-new-price {{i.newPrice}}
-                button.paints__card-button(@click="buttonClick" v-if="i.button") {{button}}
-                p.paints__card-sale-description(v-if="i.sale") {{i.saleDescription}}
+              PaintsCard(v-for="item in this.paints" :item="item" :key="item.id" :class="{'card__sale': item.sale}" @update-cart="updateCart()")
 
     footer.footer
       .container
@@ -50,11 +42,13 @@
 </template>
 
 <script>
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import PaintsCard from './components/paintsCard'
 
 export default {
   name: 'app',
+  components: {
+    PaintsCard
+  },
   data () {
     return {
       nav:[
@@ -70,7 +64,8 @@ export default {
         title: '«Рождение Венеры» Сандро Боттичелли',
         oldPrice: '2 000 000 $',
         newPrice: '1 000 000 $',
-        button: true,
+        button: 'Купить',
+        basket: false,
         inStock: true,
         sale: false
       },
@@ -79,7 +74,8 @@ export default {
         title: '«Тайная вечеря» Леонардо да Винчи',
         oldPrice: '',
         newPrice: '3 000 000 $',
-        button: true,
+        button: 'Купить',
+        basket: false,
         inStock: true,
         sale: false
       },
@@ -88,9 +84,10 @@ export default {
         title: '«Сотворение Адама» Микеланджело',
         oldPrice: '6 000 000 $',
         newPrice: '5 000 000',
-        button: true,
+        button: 'Купить',
+        basket: false,
         inStock: true,
-        sale: false
+        sale: false,
       },
       {
         imgSrc: '/src/assets/paint_4.png',
@@ -102,21 +99,21 @@ export default {
         saleDescription: 'Продана на аукционе'
       }
     ],
-    info: null,
-    button: 'Купить',
-    sale: false
+      sale: false,
+      basket: false
     }
   },
   methods: {
-    async buttonClick() {
-      const promise = axios.get('https://jsonplaceholder.typicode.com/posts/1')
-        .then(response => (this.info = response.data))
-
-        this.button = 'Loading...'
-
-      await promise
-
-        this.button = 'В корзине'
+    updateCart(item) {
+        this.basket = true;
+        this.button = localStorage.button;
+        console.log(123)
+      },
+  },
+  mounted() {
+    if (localStorage.button) {
+      this.button = localStorage.button;
+      console.log(789)
     }
   },
 }
@@ -205,6 +202,17 @@ body {
   }
 }
 
+.card__sale{
+  background: #FFFFFF;
+  opacity: 0.5;
+  .paints__card-price{
+    display: none;
+  }
+  button{
+    display: none;
+  }
+}
+
 .paints{
   padding-top: 45px;
   padding-bottom: 320px;
@@ -222,79 +230,6 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
-  &__card{
-    width: 280px;
-    border: 1px solid #E1E1E1;
-    padding-bottom: 24px;
-      &-sale{
-        background: #FFFFFF;
-        opacity: 0.5;
-        .paints__card-price{
-          display: none;
-        }
-        button{
-          display: none;
-        }
-
-      }
-      &-name{
-        margin: 0;
-        padding: 0;
-        padding-left: 24px;
-        padding-right: 24px;
-        padding-top: 20px;
-        padding-bottom: 22px;
-        box-sizing: border-box;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 18px;
-        line-height: 150%;
-        color: #343030;
-      }
-      &-block{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding-left: 24px;
-        padding-right: 24px;
-      }
-      &-old-price{
-        margin: 0;
-        padding: 0;
-        font-style: normal;
-        font-weight: 300;
-        font-size: 14px;
-        line-height: 150%;
-        text-decoration-line: line-through;
-        color: #A0A0A0;
-      }
-      &-new-price{
-        margin: 0;
-        padding: 0;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 150%;
-        color: #343030;
-      }
-      &-button{
-        width: 118px;
-        height: 48px;
-        font-family: 'Merriweather', serif;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 14px;
-        line-height: 150%;
-        color: #F4F6F9;
-        background: #382E2B;
-        border: none;
-        cursor: pointer;
-        &:hover{
-          background: #776763;
-          cursor: pointer;
-        }
-      }
   }
 }
 
