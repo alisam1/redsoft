@@ -6,8 +6,8 @@
       .card__price
         p.card__old-price {{item.oldPrice}}
         p.card__new-price {{item.newPrice}}
-      button.card__button(@click="buttonClick(item)" :class="{'card__button-basket': this.basket}") {{item.button}}
-      p.card__sale-description(v-if="item.sale" :class="{'card__sale': item.sale}") {{item.saleDescription}}
+      button.card__button(@click="buttonClick(item)" :class="{'card__button-basket': item.basket}") {{item.button}}
+      p.card__sale-description(:class="{'card__sale': item.sale}") {{item.saleDescription}}
 </template>
 
 <script>
@@ -17,12 +17,8 @@ import VueAxios from 'vue-axios'
 
 export default {
   name: "PaintsCard",
-  props: ['item'],
-  data () {
-    return {
-      basket: false
-    }
-  },
+  props:['item'],
+  data () {},
   methods: {
       async buttonClick(item) {
         this.$emit('update-cart', item)
@@ -30,15 +26,9 @@ export default {
           .then(response => (this.info = response.data))
           item.button = 'Loading...'
         await promise
-          item.button = 'В корзине'
-          this.basket = true
-          localStorage.button = this.button
+            item.button = 'В корзине'
+            item.basket = true
     }
-  },
-  mounted() {
-    if(localStorage.button)
-      this.button = localStorage.button
-      console.log(567)
   },
 }
 </script>

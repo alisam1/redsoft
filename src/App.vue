@@ -24,7 +24,12 @@
         .container
           h1.paints__title Картины эпохи Возрождения
           .paints__block
-              PaintsCard(v-for="item in this.paints" :item="item" :key="item.id" :class="{'card__sale': item.sale}" @update-cart="updateCart()")
+              PaintsCard(
+                v-for="item in paints" 
+                :item="item" 
+                :key="item.id" 
+                :class="{'card__sale': item.sale}" 
+                @update-cart="updateCart()")
 
     footer.footer
       .container
@@ -42,6 +47,7 @@
 </template>
 
 <script>
+
 import PaintsCard from './components/paintsCard'
 
 export default {
@@ -59,60 +65,61 @@ export default {
         { name: 'О галерее', path: '/' }
       ],
       paints: [
-      {
-        imgSrc: '/src/assets/paint_1.png',
-        title: '«Рождение Венеры» Сандро Боттичелли',
-        oldPrice: '2 000 000 $',
-        newPrice: '1 000 000 $',
-        button: 'Купить',
-        basket: false,
-        inStock: true,
-        sale: false
-      },
-      {
-        imgSrc: '/src/assets/paint_2.png',
-        title: '«Тайная вечеря» Леонардо да Винчи',
-        oldPrice: '',
-        newPrice: '3 000 000 $',
-        button: 'Купить',
-        basket: false,
-        inStock: true,
-        sale: false
-      },
-      {
-        imgSrc: '/src/assets/paint_3.png',
-        title: '«Сотворение Адама» Микеланджело',
-        oldPrice: '6 000 000 $',
-        newPrice: '5 000 000',
-        button: 'Купить',
-        basket: false,
-        inStock: true,
-        sale: false,
-      },
-      {
-        imgSrc: '/src/assets/paint_4.png',
-        title: '«Урок анатомии» Рембрандт',
-        oldPrice: '',
-        newPrice: '',
-        inStock: false,
-        sale: true,
-        saleDescription: 'Продана на аукционе'
-      }
-    ],
-      sale: false,
-      basket: false
+        {
+          imgSrc: '/src/assets/paint_1.png',
+          title: '«Рождение Венеры» Сандро Боттичелли',
+          oldPrice: '2 000 000 $',
+          newPrice: '1 000 000 $',
+          button: 'Купить',
+          basket: false,
+          inStock: true,
+          sale: false
+        },
+        {
+          imgSrc: '/src/assets/paint_2.png',
+          title: '«Тайная вечеря» Леонардо да Винчи',
+          oldPrice: '',
+          newPrice: '3 000 000 $',
+          button: 'Купить',
+          basket: false,
+          inStock: true,
+          sale: false
+        },
+        {
+          imgSrc: '/src/assets/paint_3.png',
+          title: '«Сотворение Адама» Микеланджело',
+          oldPrice: '6 000 000 $',
+          newPrice: '5 000 000',
+          button: 'Купить',
+          basket: false,
+          inStock: true,
+          sale: false,
+        },
+        {
+          imgSrc: '/src/assets/paint_4.png',
+          title: '«Урок анатомии» Рембрандт',
+          oldPrice: '',
+          newPrice: '',
+          inStock: false,
+          sale: true,
+          saleDescription: 'Продана на аукционе'
+        }
+      ]
     }
   },
   methods: {
     updateCart(item) {
-        this.basket = true;
-        this.button = localStorage.button;
+        this.getStateBasket()
         console.log(123)
       },
+      getStateBasket(){
+        localStorage.basket = this.basket
+        console.log(1234)
+      }
   },
   mounted() {
-    if (localStorage.button) {
-      this.button = localStorage.button;
+    if (localStorage.basket) {
+      this.basket = localStorage.basket;
       console.log(789)
     }
   },
