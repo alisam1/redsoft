@@ -104,23 +104,21 @@ export default {
           sale: true,
           saleDescription: 'Продана на аукционе'
         }
-      ]
+      ],
     }
   },
   methods: {
     updateCart(item) {
-        this.getStateBasket()
-        console.log(123)
+        this.getInitialButton()
       },
-      getStateBasket(){
-        localStorage.basket = this.basket
-        console.log(1234)
-      }
+      getInitialButton: function(){
+        localStorage.button = this.button
+        console.log(315)
+    }
   },
   mounted() {
-    if (localStorage.basket) {
-      this.basket = localStorage.basket;
-      console.log(789)
+    if (localStorage.button) {
+      this.button = localStorage.button;
     }
   },
 }
@@ -172,6 +170,7 @@ body {
     flex-direction: row;
     align-items: center;
     input[type="search"]{
+      -webkit-appearance: none;
       width: 294px;
       border: 1px solid #E1E1E1;
       padding-top: 13px;
@@ -190,9 +189,12 @@ body {
         color: #343030;
       }
     }
+    input[type="search"]::-webkit-search-cancel-button {
+      display: none !important;
+    }
     input[type="submit"]{
       width: 122px;
-      padding-top: 13px;
+      padding-top: 14px;
       padding-bottom: 14px;
       box-sizing: border-box;
       font-family: 'Merriweather', serif;
@@ -214,6 +216,9 @@ body {
   opacity: 0.5;
   .paints__card-price{
     display: none;
+  }
+  p{
+    width: 100%;
   }
   button{
     display: none;

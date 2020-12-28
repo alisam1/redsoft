@@ -6,8 +6,8 @@
       .card__price
         p.card__old-price {{item.oldPrice}}
         p.card__new-price {{item.newPrice}}
-      button.card__button(@click="buttonClick(item)" :class="{'card__button-basket': item.basket}") {{item.button}}
-      p.card__sale-description(:class="{'card__sale': item.sale}") {{item.saleDescription}}
+      button.card__button(@click="buttonClick(item)" :class="{'card__button-basket': item.basket, 'card__button-loading': item.loading}") {{item.button}}
+      p(:class="{'card__sale-description': item.sale, 'card__none-description': !item.sale}") {{item.saleDescription}}
 </template>
 
 <script>
@@ -18,17 +18,21 @@ import VueAxios from 'vue-axios'
 export default {
   name: "PaintsCard",
   props:['item'],
-  data () {},
+  data () {
+    return {}
+  },
   methods: {
       async buttonClick(item) {
         this.$emit('update-cart', item)
+        localStorage.basket = this.basket
         const promise = axios.get('https://jsonplaceholder.typicode.com/posts/1')
           .then(response => (this.info = response.data))
-          item.button = 'Loading...'
-        await promise
-            item.button = 'В корзине'
-            item.basket = true
-    }
+              item.loading = true
+          await promise
+              item.button = 'В корзине'
+              item.basket = true,
+              item.loading = false
+    },
   },
 }
 </script>
@@ -44,6 +48,9 @@ export default {
       &__sale{
         background: #FFFFFF;
         opacity: 0.5;
+        &-description{
+          display: block;
+        }
         .paints__card-price{
           display: none;
         }
@@ -52,12 +59,15 @@ export default {
         }
 
       }
+      &__none-description{
+        display: none;
+      }
       &__name{
         margin: 0;
         padding: 0;
         padding-left: 24px;
         padding-right: 24px;
-        padding-top: 20px;
+        padding-top: 17px;
         padding-bottom: 22px;
         box-sizing: border-box;
         font-style: normal;
@@ -93,7 +103,7 @@ export default {
         color: #343030;
       }
       &__button{
-        width: 118px;
+        width: 114px;
         height: 48px;
         font-family: 'Merriweather', serif;
         font-style: normal;
@@ -104,6 +114,22 @@ export default {
         background: #382E2B;
         border: none;
         cursor: pointer;
+        margin-left: 20px;
+        &-loading{
+          position: relative;
+          &::after{
+            content:"";
+            position: absolute;
+            border: 2px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 2px solid #000;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+            left: 47px;
+          }
+        }
         &-basket{
           background: #5B3A32;
           position: relative;
@@ -123,6 +149,17 @@ export default {
           cursor: pointer;
         }
       }
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
 
